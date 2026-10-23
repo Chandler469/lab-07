@@ -19,6 +19,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -27,7 +28,10 @@ import androidx.navigation.NavController
 
 @Composable
 fun DriversScreen(navController: NavController) {
-    var races = remember {
+    var driver by remember {
+        mutableStateOf("")
+    }
+    var drivers = remember {
         mutableStateListOf<String>()
     }
 
@@ -50,50 +54,48 @@ fun DriversScreen(navController: NavController) {
 
         // title text
         Text(
-            text = "Upcoming Races",
+            text = "FormulaZero Drivers",
             fontSize = 30.sp
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // text field and button to add race locations
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextField(
-                value = location,
+                value = driver,
                 onValueChange = {
-                    location = it // update location to new value
+                    driver = it // update location to new value
                 },
                 label = {
-                    Text("Race Location")
+                    Text("Driver Name")
                 },
-                modifier = Modifier.testTag("locationInput") // for testing
+                modifier = Modifier.testTag("driverInput") // for testing
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
                 onClick = {
-                    if (location.isNotBlank()) {
-                        races.add(location)
-                        location = ""
+                    if (driver.isNotBlank()) {
+                        drivers.add(driver)
+                        driver = ""
                     }
                 },
-                modifier = Modifier.testTag("addRaceButton") // for testing
+                modifier = Modifier.testTag("addDriverButton") // for testing
             ) {
                 Text("Add")
             }
         }
 
-        // list to display races
         LazyColumn {
-            items(races) { race ->
+            items(drivers) { driver ->
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
-                    text = race,
+                    text = driver,
                     fontSize = 24.sp
                 )
             }
